@@ -287,13 +287,16 @@ public class CollatorProcess extends PamProcess {
 		return collatorDataBlock;
 	}
 	
-	public void saveWAV(long fs, double[][] wav, long UID) {
-		AudioFormat af = new Wav16AudioFormat(fs, wav.length);
-		//SelectFolder select = new SelectFolder("Select output folder", 30, true);
-		//select.
-		//WavFileWriter wavFile = new WavFileWriter("C:\\SystemTesting\\Nextimus\\WavtestFolder\\"+String.valueOf(UID)+".wav", af);
-		//wavFile.write(wav);
-		//wavFile.close();
+	public void saveWAV(long fs, double[][] wav, long UID, String identifier) {
+		String pgHome = pamguard.Pamguard.getSettingsFolder();
+		File clipStore = Paths.get(pgHome,"Saved Clips").toFile();
+		if(!clipStore.exists()) {
+			clipStore.mkdir();
+		}
+		String filePrefix = String.valueOf(UID)+"_"+identifier+"_";
+		String fileName = PamCalendar.createFileName(System.currentTimeMillis(), filePrefix, ".wav");
+		String fullFilePath = Paths.get(clipStore.toString(),fileName).toString();
+		WavFileWriter.write(fullFilePath, fs, wav);
 	}
 
 	
